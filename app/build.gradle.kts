@@ -70,6 +70,7 @@ dependencies {
     kapt(libs.dagger.hilt.compiler)
     implementation(libs.androidx.paging.runtime.ktx)
     implementation(libs.androidx.paging.compose)
+    implementation(libs.google.code.gson)
     implementation(libs.squareup.retrofit)
     implementation(libs.squareup.retrofit.converter.moshi)
     implementation(libs.squareup.okhttp3.logging.interceptor)
