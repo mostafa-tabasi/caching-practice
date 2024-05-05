@@ -8,6 +8,7 @@ import androidx.room.withTransaction
 import com.cachingpractice.android.data.local.BeerDatabase
 import com.cachingpractice.android.data.local.BeerEntity
 import com.cachingpractice.android.data.toBeerEntity
+import kotlinx.coroutines.delay
 import okio.IOException
 import retrofit2.HttpException
 
@@ -30,6 +31,9 @@ class BeerRemoteMediator(
                     else (lastItem.id / state.config.pageSize) + 1
                 }
             }
+
+            //For making the API loading more visible
+            delay(1500)
 
             val beers = beerApi.getBeers(
                 page = loadKey,
