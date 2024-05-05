@@ -1,12 +1,13 @@
 package com.cachingpractice.android.presentation
 
 import android.widget.Toast
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -28,11 +29,13 @@ fun BeerScreen() {
     val beers: LazyPagingItems<Beer> = viewModel.beerPagingFlow.collectAsLazyPagingItems()
 
     LaunchedEffect(key1 = beers.loadState) {
-        if (beers.loadState.refresh is LoadState.Error) Toast.makeText(
-            context,
-            "Error: ${(beers.loadState.refresh as LoadState.Error).error.message}",
-            Toast.LENGTH_SHORT
-        ).show()
+        if (beers.loadState.append is LoadState.Error) {
+            Toast.makeText(
+                context,
+                "Error: ${(beers.loadState.append as LoadState.Error).error.message}",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -43,9 +46,14 @@ fun BeerScreen() {
         } else {
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
+                // verticalArrangement = Arrangement.spacedBy(4.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
+                item {
+                    Button(onClick = { viewModel.clearDb() }) {
+                        Text(text = "Clear")
+                    }
+                }
                 items(beers) {
                     it?.let { BeerItem(beer = it) }
                 }

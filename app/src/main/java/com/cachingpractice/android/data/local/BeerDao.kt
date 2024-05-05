@@ -16,4 +16,7 @@ interface BeerDao {
 
     @Query("DELETE FROM beer_entity")
     suspend fun clearAll()
+
+    @Query("SELECT * FROM beer_entity WHERE id=(SELECT max(id) FROM beer_entity)")
+    suspend fun lastBeer(): BeerEntity?
 }

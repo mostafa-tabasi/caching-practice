@@ -7,4 +7,6 @@ import kotlinx.coroutines.flow.Flow
 interface BeerRepository {
 
     fun getBeerPagingFlow(): Flow<PagingData<Beer>>
+
+    suspend fun clearBeers()
 }

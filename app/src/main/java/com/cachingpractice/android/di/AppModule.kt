@@ -8,6 +8,7 @@ import androidx.room.Room
 import com.cachingpractice.android.data.local.BeerDatabase
 import com.cachingpractice.android.data.local.BeerEntity
 import com.cachingpractice.android.data.remote.BeerApi
+import com.cachingpractice.android.data.remote.BeerApiMockImpl
 import com.cachingpractice.android.data.remote.BeerRemoteMediator
 import com.cachingpractice.android.data.repository.BeerRepository
 import com.cachingpractice.android.data.repository.BeerRepositoryImpl
@@ -16,9 +17,6 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
-import retrofit2.create
 import javax.inject.Singleton
 
 @OptIn(ExperimentalPagingApi::class)
@@ -39,11 +37,14 @@ object AppModule {
     @Provides
     @Singleton
     fun provideBeerApi(): BeerApi {
+        return BeerApiMockImpl()
+        /*
         return Retrofit.Builder()
             .baseUrl(BeerApi.BASE_URL)
             .addConverterFactory(MoshiConverterFactory.create())
             .build()
             .create()
+        */
     }
 
     @Provides
@@ -53,7 +54,7 @@ object AppModule {
         beerApi: BeerApi,
     ): Pager<Int, BeerEntity> {
         return Pager(
-            config = PagingConfig(pageSize = 20),
+            config = PagingConfig(pageSize = 10),
             remoteMediator = BeerRemoteMediator(
                 beerDb,
                 beerApi,
@@ -67,8 +68,9 @@ object AppModule {
     @Provides
     @Singleton
     fun provideBeerRepository(
+        beerDb: BeerDatabase,
         beerPager: Pager<Int, BeerEntity>,
     ): BeerRepository {
-        return BeerRepositoryImpl(beerPager)
+        return BeerRepositoryImpl(beerDb, beerPager)
     }
 }
